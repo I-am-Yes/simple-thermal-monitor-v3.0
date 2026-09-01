@@ -4,6 +4,14 @@ Lightweight Windows overlay for CPU, GPU, and SSD temperatures.
 
 <p align="center">
   <img src="docs/preview.png" alt="Simple Thermal Monitor window showing CPU Package, P-Core 0, GPU, and SSD temperatures" width="560" />
+  <br />
+  <em>Windowed</em>
+</p>
+
+<p align="center">
+  <img src="docs/preview-transparent.png" alt="Simple Thermal Monitor in transparent mode, with temperatures over the desktop" width="720" />
+  <br />
+  <em>Transparent mode</em>
 </p>
 
 Always-on-top cards for **CPU Package**, **P-Core 0**, **GPU**, and **SSD**, with a settings drawer for refresh delay, transparency, and text size.

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple Thermal Monitor transparent preview</title>
+    <link rel="stylesheet" href="../src/styles.css" />
+    <style>
+      html,
+      body {
+        width: 720px;
+        height: 450px;
+        overflow: hidden;
+      }
+      body {
+        background: transparent !important;
+      }
+      body::before {
+        display: none !important;
+      }
+      .desktop {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(80% 70% at 18% 8%, #3a5a7a 0%, transparent 52%),
+          radial-gradient(70% 80% at 92% 82%, #1a3a28 0%, transparent 46%),
+          linear-gradient(160deg, #1b2740 0%, #243018 48%, #0e1a14 100%);
+      }
+      .desktop-window {
+        position: absolute;
+        top: 36px;
+        left: 36px;
+        width: 400px;
+        height: 268px;
+        border-radius: 10px;
+        background: #1e1e1e;
+        box-shadow: 0 18px 40px rgb(0 0 0 / 0.35);
+        overflow: hidden;
+      }
+      .desktop-window-bar {
+        height: 28px;
+        background: #2d2d2d;
+        color: #c8c8c8;
+        font: 600 12px "Segoe UI", sans-serif;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+      }
+      .desktop-window-body {
+        padding: 16px 18px;
+        font: 13px/1.55 "Cascadia Code", Consolas, monospace;
+        color: #d4d4d4;
+      }
+      .desktop-window-body .kw {
+        color: #569cd6;
+      }
+      .taskbar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 36px;
+        background: rgb(16 18 22 / 0.88);
+        border-top: 1px solid rgb(255 255 255 / 0.08);
+      }
+      .overlay {
+        position: absolute;
+        right: 16px;
+        top: 28px;
+        z-index: 2;
+        width: 560px;
+        height: 390px;
+        overflow: hidden;
+      }
+      .overlay .titlebar,
+      .overlay .settings-btn {
+        display: none;
+      }
+      .overlay .monitor {
+        padding: 28px 20px;
+      }
+      .overlay .card {
+        min-height: 0;
+        padding: 8px 10px;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+      .overlay .card::before {
+        display: none;
+      }
+      .overlay .card-label {
+        color: #fff;
+        text-shadow: 0 1px 2px #000, 0 0 10px #000;
+      }
+      .overlay .card-temp {
+        filter: drop-shadow(0 2px 6px #000);
+      }
+      .overlay .card-temp .deg {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="desktop">
+      <div class="desktop-window">
+        <div class="desktop-window-bar">main.rs</div>
+        <div class="desktop-window-body">
+          <div><span class="kw">fn</span> main() {</div>
+          <div>&nbsp;&nbsp;simple_thermal_monitor_lib::run()</div>
+          <div>}</div>
+        </div>
+      </div>
+      <div class="taskbar"></div>
+    </div>
+
+    <div class="overlay">
+      <main class="monitor">
+        <section class="board">
+          <div class="cards">
+            <article class="card" style="--heat: rgb(135, 255, 0)">
+              <div class="card-stack">
+                <span class="card-label">CPU Package</span>
+                <div class="card-temp">
+                  <span class="num">41.2</span>
+                  <span class="deg">°C</span>
+                </div>
+              </div>
+            </article>
+            <article class="card" style="--heat: rgb(119, 255, 0)">
+              <div class="card-stack">
+                <span class="card-label">P-Core 0</span>
+                <div class="card-temp">
+                  <span class="num">38.6</span>
+                  <span class="deg">°C</span>
+                </div>
+              </div>
+            </article>
+            <article class="card" style="--heat: rgb(185, 255, 0)">
+              <div class="card-stack">
+                <span class="card-label">GPU</span>
+                <div class="card-temp">
+                  <span class="num">49.0</span>
+                  <span class="deg">°C</span>
+                </div>
+              </div>
+            </article>
+            <article class="card" style="--heat: rgb(166, 255, 0)">
+              <div class="card-stack">
+                <span class="card-label">SSD</span>
+                <div class="card-temp">
+                  <span class="num">46.0</span>
+                  <span class="deg">°C</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
