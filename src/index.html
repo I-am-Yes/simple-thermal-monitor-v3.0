@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Thermal Monitor</title>
+    <script type="module" src="/main.js" defer></script>
+  </head>
+  <body class="app-focused">
+    <header class="titlebar" data-tauri-drag-region>
+      <span class="titlebar-title" data-tauri-drag-region>Thermal Monitor</span>
+      <div class="window-controls">
+        <button id="pin-btn" class="win-btn pin" type="button" aria-pressed="false" aria-label="Pin on top" title="Pin on top">
+          <svg id="pin-icon" viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M7.7 1.5l2.8 2.8-1.15 1.15-.85-.3-2.45 4.25-.95-.95 2.45-4.25-.3-.85L7.7 1.5z" />
+            <path d="M5.15 8.45L3.2 10.7" />
+          </svg>
+        </button>
+        <button id="min-btn" class="win-btn" type="button" aria-label="Minimize" title="Minimize">
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 6h10" /></svg>
+        </button>
+        <button id="max-btn" class="win-btn" type="button" aria-label="Maximize" title="Maximize">
+          <svg id="max-icon" viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1.5" width="9" height="9" rx="0.5" /></svg>
+        </button>
+        <button id="close-btn" class="win-btn close" type="button" aria-label="Close" title="Close">
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2L2 10" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <div id="scrim" class="scrim" hidden></div>
+
+    <aside id="settings-panel" class="settings-panel" aria-hidden="true">
+      <h2>Settings</h2>
+      <form id="settings-form" autocomplete="off">
+        <label for="delay-input">Refresh delay</label>
+        <div class="delay-row">
+          <input
+            id="delay-input"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            value="500"
+            aria-label="Refresh delay in milliseconds"
+          />
+          <span class="unit-tag">ms</span>
+        </div>
+        <p class="hint">Press Enter to apply</p>
+
+        <div class="setting-block">
+          <div class="setting-head">
+            <span>Transparent mode</span>
+            <button
+              id="transparent-toggle"
+              class="toggle"
+              type="button"
+              role="switch"
+              aria-checked="false"
+              aria-label="Transparent mode"
+            >
+              <span class="toggle-thumb"></span>
+            </button>
+          </div>
+          <div id="opacity-controls" class="opacity-controls">
+            <div class="setting-head">
+              <label for="bg-opacity-input">Background opacity</label>
+              <span id="bg-opacity-value">100%</span>
+            </div>
+            <input
+              id="bg-opacity-input"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="100"
+              aria-label="Background opacity"
+            />
+            <div class="setting-head">
+              <label for="text-opacity-input">Text opacity</label>
+              <span id="text-opacity-value">100%</span>
+            </div>
+            <input
+              id="text-opacity-input"
+              type="range"
+              min="20"
+              max="100"
+              step="1"
+              value="100"
+              aria-label="Text opacity"
+            />
+          </div>
+        </div>
+        <div class="setting-block">
+          <div class="setting-head">
+            <span>Auto text size</span>
+            <button
+              id="auto-size-toggle"
+              class="toggle"
+              type="button"
+              role="switch"
+              aria-checked="false"
+              aria-label="Auto text size"
+            >
+              <span class="toggle-thumb"></span>
+            </button>
+          </div>
+          <div id="size-controls" class="size-controls">
+            <div class="setting-head">
+              <label for="label-size-input">Component text size</label>
+              <span id="label-size-value">12px</span>
+            </div>
+            <input
+              id="label-size-input"
+              type="range"
+              min="10"
+              max="28"
+              step="1"
+              value="12"
+              aria-label="Component text size"
+            />
+            <div class="setting-head">
+              <label for="temp-size-input">Temperature text size</label>
+              <span id="temp-size-value">32px</span>
+            </div>
+            <input
+              id="temp-size-input"
+              type="range"
+              min="18"
+              max="72"
+              step="1"
+              value="32"
+              aria-label="Temperature text size"
+            />
+          </div>
+          <p class="hint">When on, text scales to fill the window. Manual size sliders are locked.</p>
+        </div>
+        <div class="reset-wrap">
+          <button id="reset-btn" class="reset-btn" type="button">
+            Reset to default
+          </button>
+        </div>
+      </form>
+    </aside>
+
+    <main class="monitor">
+      <section class="board" data-tauri-drag-region>
+        <div id="readings" class="cards"></div>
+      </section>
+    </main>
+
+    <button
+      id="settings-btn"
+      class="settings-btn"
+      type="button"
+      aria-label="Open settings"
+      aria-expanded="false"
+      aria-controls="settings-panel"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.03 7.03 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 2h-3.8a.5.5 0 0 0-.49.42l-.36 2.54c-.59.24-1.13.55-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.6.22l2.39-.96c.5.39 1.04.7 1.63.94l.36 2.54c.04.24.25.42.49.42h3.8c.24 0 .45-.18.49-.42l.36-2.54c.59-.24 1.13-.55 1.63.94l2.39.96c.23.12.52.02.6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"
+        />
+      </svg>
+    </button>
+  </body>
+</html>

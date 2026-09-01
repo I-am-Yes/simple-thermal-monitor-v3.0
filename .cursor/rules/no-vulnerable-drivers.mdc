@@ -1,0 +1,23 @@
+---
+description: Never use blocked kernel drivers for hardware sensors
+alwaysApply: true
+---
+
+# No vulnerable kernel drivers
+
+Windows blocks known-vulnerable sensor drivers (Defender `VulnerableDriver:WinNT/Winring0`). Do not bring them back.
+
+## Never add
+- WinRing0 / WinRing0x64 / `R0*` `.sys` drivers
+- LibreHardwareMonitor **before 0.9.5** or OpenHardwareMonitor (they load WinRing0)
+- inpout, inpoutx64, RwDrv, or any other blocked kernel driver used to read MSRs/SMU
+
+Admin elevation is allowed. WinRing0 is not.
+
+## Allowed temperature sources
+- CPU / GPU / SSD: LibreHardwareMonitorLib **0.9.6+** via the `stm-lhm` sidecar, which uses **PawnIO** (signed, separately installed). Never embed or load WinRing0.
+- GPU fallback: NVIDIA NVML (user-mode GPU driver)
+- CPU fallback: ACPI / WMI thermal zones, performance counters
+- SSD fallback: `IOCTL_STORAGE_QUERY_PROPERTY` and other user-mode storage APIs
+
+If PawnIO is missing, install the official PawnIO setup (`-install -silent`) when elevated, or fall back to user-mode APIs. If a sensor is still unavailable, show `—` rather than loading a blocked driver.

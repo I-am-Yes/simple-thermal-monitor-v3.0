@@ -1,0 +1,14 @@
+{
+  "name": "simple-thermal-monitor",
+  "private": true,
+  "version": "3.0.0",
+  "type": "module",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}
